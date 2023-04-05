@@ -1,0 +1,27 @@
+paths = glob.glob(r"./*")
+
+img1 = cv2.imread(paths[0], cv2.IMREAD_GRAYSCALE)
+
+for i in range(1,len(paths)):
+    # 画像を読み込む
+    img2 = cv2.imread(paths[i], cv2.IMREAD_GRAYSCALE)
+
+    # データ型を変換する
+    img1 = np.uint16(img1)
+    img2 = np.uint16(img2)
+
+    # 画像を加算する
+    sum_img = cv2.add(img1, img2)
+
+# 各画素を輝度値の最大値で除算する
+max_val = np.max(sum_img)
+norm_img = sum_img / max_val
+
+# ヒートマップで重畳する
+heatmap_img = cv2.applyColorMap(np.uint8(255*norm_img), cv2.COLORMAP_JET)
+
+# 画像を保存する
+cv2.imwrite('heatmap.jpg', heatmap_img)
+
+plt.imshow(heatmap_img)
+plt.show()
